@@ -1,0 +1,361 @@
+================================================================================
+QUICK REFERENCE & TROUBLESHOOTING GUIDE
+================================================================================
+
+ACCESSING THE SYSTEM:
+================================================================================
+
+1. Root URL:
+   http://localhost/sistem-tokohewan/
+   → Akan redirect ke login jika belum login
+   → Akan redirect ke dashboard jika sudah login
+
+2. Login Page:
+   http://localhost/sistem-tokohewan/auth/login.php
+
+3. Register New User (Public):
+   http://localhost/sistem-tokohewan/auth/register.php
+
+4. Create Admin (One time only):
+   http://localhost/sistem-tokohewan/create_admin.php
+
+DEFAULT LOGIN:
+Email: admin@petshop.local
+Password: admin123
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+PROBLEM: "Database connection failed"
+SOLUTION:
+  1. Check if MySQL is running (look in system tray)
+  2. Verify config.php settings:
+     - DB_HOST should be 127.0.0.1 or localhost
+     - DB_NAME should be "petshop"
+     - DB_USER should be "root" (default)
+     - DB_PASS should be "" (empty) for XAMPP default
+  3. Check phpmyadmin: http://localhost/phpmyadmin/
+  4. Import sql/petshop.sql if database is empty
+
+PROBLEM: "Login failed" or "Email atau password salah"
+SOLUTION:
+  1. Make sure database is imported (sql/petshop.sql)
+  2. Make sure create_admin.php was run
+  3. Try default: admin@petshop.local / admin123
+  4. Check if email exists in users table (phpmyadmin)
+  5. Register new user if needed
+
+PROBLEM: "Page not found" or 404 error
+SOLUTION:
+  1. Check folder structure (should be c:\xampp\htdocs\sistem-tokohewan)
+  2. Verify URL path is correct
+  3. Check if .htaccess exists (not required for basic setup)
+  4. Restart Apache in XAMPP
+
+PROBLEM: "Syntax error" or PHP errors
+SOLUTION:
+  1. Check PHP version (should be 7.4+)
+  2. Check for missing semicolons or brackets in code
+  3. Look at error message - line number will be shown
+  4. Check browser console for JavaScript errors (F12)
+
+PROBLEM: "Access Denied" or 403 error
+SOLUTION:
+  1. Your user role doesn't have permission
+  2. Admin users have full access
+  3. Kasir can't access user management
+  4. Login with appropriate role
+
+PROBLEM: "Cannot add/edit/delete data"
+SOLUTION:
+  1. Check database connection first
+  2. Make sure you have proper role
+  3. Check browser console for AJAX errors
+  4. Verify form validation (required fields)
+  5. Check for duplicate email/invoice number
+
+PROBLEM: "Invoice print not working"
+SOLUTION:
+  1. Click "Print" button from invoice page
+  2. Select printer and print from browser dialog
+  3. Or use browser print dialog (Ctrl+P)
+  4. Make sure JavaScript is enabled
+
+PROBLEM: "Stock not updating after sale"
+SOLUTION:
+  1. Make sure sale was created successfully
+  2. Check inventory/history tab
+  3. Verify pet stock before sale
+  4. Check database directly via phpmyadmin
+
+================================================================================
+QUICK COMMANDS
+================================================================================
+
+RESTART APACHE (XAMPP):
+  1. Open XAMPP Control Panel
+  2. Click "Stop" on Apache
+  3. Wait 2 seconds
+  4. Click "Start" on Apache
+  5. Wait for "Running" status
+
+RESTART MYSQL (XAMPP):
+  1. Open XAMPP Control Panel
+  2. Click "Stop" on MySQL
+  3. Wait 2 seconds
+  4. Click "Start" on MySQL
+  5. Wait for "Running" status
+
+BACKUP DATABASE:
+  1. Open phpmyadmin
+  2. Select "petshop" database
+  3. Click "Export"
+  4. Download SQL file
+  5. Save to safe location
+
+RESTORE DATABASE:
+  1. Open phpmyadmin
+  2. Click "Import"
+  3. Select SQL file
+  4. Click "Go" to import
+
+================================================================================
+COMMON URLS
+================================================================================
+
+Dashboard:
+  http://localhost/sistem-tokohewan/
+
+Login:
+  http://localhost/sistem-tokohewan/auth/login.php
+
+Register:
+  http://localhost/sistem-tokohewan/auth/register.php
+
+Customers:
+  http://localhost/sistem-tokohewan/customers/
+
+Pets:
+  http://localhost/sistem-tokohewan/pets/
+
+Suppliers:
+  http://localhost/sistem-tokohewan/suppliers/
+
+Sales:
+  http://localhost/sistem-tokohewan/sales/
+
+New Sale:
+  http://localhost/sistem-tokohewan/sales/create.php
+
+Inventory:
+  http://localhost/sistem-tokohewan/inventory/
+
+Users (Admin only):
+  http://localhost/sistem-tokohewan/users/
+
+Reports:
+  http://localhost/sistem-tokohewan/reports/sales_report.php
+  http://localhost/sistem-tokohewan/reports/stock_report.php
+  http://localhost/sistem-tokohewan/reports/customer_report.php
+
+API Search:
+  http://localhost/sistem-tokohewan/api/search.php?q=keyword
+
+API Get Pet:
+  http://localhost/sistem-tokohewan/api/get_pet.php?id=1
+
+API Get Customer:
+  http://localhost/sistem-tokohewan/api/get_customer.php?id=1
+
+PHPMyAdmin:
+  http://localhost/phpmyadmin/
+
+================================================================================
+DATABASE ACCESS
+================================================================================
+
+PHPMYADMIN:
+  URL: http://localhost/phpmyadmin/
+  Username: root
+  Password: (empty for XAMPP default)
+  Database: petshop
+
+IMPORTANT TABLES:
+  - users: login credentials & roles
+  - customers: customer data
+  - pets: product catalog
+  - sales: transaction records
+  - sales_items: transaction items
+  - inventory_history: stock changes
+
+================================================================================
+FILE EDITING
+================================================================================
+
+TO CHANGE:                  EDIT THIS FILE:
+--------                    --------
+Database connection         config.php
+Color scheme               assets/css/style.css
+Logo                       assets/images/ + templates/sidebar.php
+Menu items                 templates/sidebar.php
+Page title                 Each page (at top): $title = 'xxx'
+Database name              config.php
+Default admin email        create_admin.php
+API base path              core/helpers.php (base_url function)
+
+================================================================================
+CODE STRUCTURE
+================================================================================
+
+ROUTING PATTERN:
+- index.php → List items
+- create.php → Add form
+- edit.php → Update form
+- delete.php → Delete handler
+- view.php → Detail view
+
+SESSION PATTERN:
+- require_once __DIR__ . '/../init.php'; (load core)
+- require_login(); (check login)
+- require_role('admin'); (check role)
+
+DB PATTERN:
+- Prepared statements: $stmt = $pdo->prepare('SQL')
+- Execute: $stmt->execute([$var1, $var2, ...])
+- Fetch: $result = $stmt->fetch(); or $stmt->fetchAll();
+
+SECURITY PATTERN:
+- Output: echo e($variable); (escape)
+- Input: clean_input($_POST['field']); (sanitize)
+- DB: Always use prepared statements
+
+FORM PATTERN:
+- Form submits to same page (action="")
+- $_SERVER['REQUEST_METHOD'] === 'POST' checks
+- Validation before database insert
+- Redirect on success
+
+================================================================================
+DEVELOPMENT TIPS
+================================================================================
+
+1. ALWAYS use prepared statements for database queries
+2. ALWAYS escape output with e() function
+3. ALWAYS sanitize input with clean_input()
+4. Test forms locally before deploying
+5. Check browser console for JS errors (F12)
+6. Use phpmyadmin to verify data
+7. Keep backup of database
+8. Test all user roles (admin/kasir/owner)
+9. Use Firefox/Chrome developer tools
+10. Read error messages carefully (they help!)
+
+ADDING NEW FEATURE:
+1. Create new table in database
+2. Create new folder in root (if needed)
+3. Create CRUD pages (index/create/edit/delete/view)
+4. Add menu item to sidebar.php
+5. Test each feature
+6. Document in DOKUMENTASI.txt
+
+================================================================================
+PERFORMANCE OPTIMIZATION
+================================================================================
+
+Current setup is suitable for:
+- Small to medium petshops (100-500 daily transactions)
+- Single location operations
+- Up to 100 concurrent users
+
+For larger scale, consider:
+1. Add indexes to frequently queried columns
+2. Implement database connection pooling
+3. Cache frequently used data
+4. Use CDN for static assets
+5. Split database read/write operations
+6. Implement API rate limiting
+7. Add monitoring & logging
+
+================================================================================
+SECURITY CHECKLIST
+================================================================================
+
+Development:
+✓ Password hashing implemented
+✓ SQL injection prevention (prepared statements)
+✓ XSS prevention (output escaping)
+✓ Session management (require_login)
+✓ Role-based access control
+
+Before Production:
+□ Change database password
+□ Remove create_admin.php or protect it
+□ Enable HTTPS/SSL certificate
+□ Set proper file permissions
+□ Add CSRF token protection
+□ Implement rate limiting
+□ Add activity logging
+□ Setup backups
+□ Test disaster recovery
+□ Security audit & penetration test
+
+================================================================================
+MAINTENANCE TASKS
+================================================================================
+
+Daily:
+- Monitor system for errors
+- Check database size
+- Backup if configured
+
+Weekly:
+- Review activity logs
+- Check user activity
+- Verify backups are working
+- Update customer/product info
+
+Monthly:
+- Database optimization (cleanup old logs)
+- Security review
+- Performance analysis
+- User access audit
+
+Quarterly:
+- Full system backup
+- Security update check
+- Code review & refactoring
+- Performance tuning
+
+================================================================================
+SUPPORT
+================================================================================
+
+If you encounter issues:
+
+1. Check the error message carefully
+2. Look in DOKUMENTASI.txt for details
+3. Check this troubleshooting guide
+4. Look at the code comments
+5. Search for similar issues online
+6. Enable debug mode (if available)
+7. Check browser console (F12)
+8. Review phpmyadmin for data integrity
+
+DEBUG MODE (Enable in config.php):
+- Add error reporting at top of config.php
+- Set PDO errmode to ERRMODE_EXCEPTION
+- Check /var/log/php_errors.log
+
+================================================================================
+VERSION INFO
+================================================================================
+
+Version: 1.0
+Build: December 2024
+PHP Version: 7.4+ (tested on 8.0+)
+MySQL Version: 5.7+ or MariaDB
+Bootstrap Version: 5.3.2
+Chart.js Version: Latest CDN
+
+================================================================================

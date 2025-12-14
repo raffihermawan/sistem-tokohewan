@@ -1,0 +1,447 @@
+================================================================================
+INSTALLATION & SETUP GUIDE (Step by Step)
+================================================================================
+
+SISTEM INFORMASI PETSHOP
+Version: 1.0
+Created: December 2024
+
+================================================================================
+PART 1: PREPARATION
+================================================================================
+
+1. VERIFY YOUR SETUP:
+   ✓ XAMPP installed (Apache, MySQL, PHP)
+   ✓ XAMPP Control Panel running
+   ✓ Apache service RUNNING (green)
+   ✓ MySQL service RUNNING (green)
+
+   If not running:
+   - Open XAMPP Control Panel
+   - Click "Start" on Apache
+   - Click "Start" on MySQL
+   - Wait for both to show "Running"
+
+2. VERIFY PHP VERSION:
+   - Open: http://localhost/phpmyadmin/
+   - Look for "Server version" info at bottom
+   - Should be PHP 7.4 or higher (7.4, 8.0, 8.1, 8.2 recommended)
+
+3. FILE EXTRACTION:
+   - Extract sistem-tokohewan folder
+   - Copy to: c:\xampp\htdocs\sistem-tokohewan\
+   - Verify structure (see file list in README.txt)
+
+================================================================================
+PART 2: DATABASE SETUP
+================================================================================
+
+STEP 1: Open phpMyAdmin
+   - Open browser: http://localhost/phpmyadmin/
+   - Leave username as "root"
+   - Leave password empty
+   - Click "Go" to login
+   - You should see a list of databases
+
+STEP 2: Import Database File
+   - Click "Import" tab at top
+   - Click "Browse" button
+   - Navigate to: sistem-tokohewan/sql/petshop.sql
+   - Select the file (petshop.sql)
+   - Scroll down
+   - Click "Go" button
+   - Wait for process to complete
+   - You should see: "Import has been successfully finished"
+
+STEP 3: Verify Database Created
+   - Look at left sidebar in phpMyAdmin
+   - You should see "petshop" database in the list
+   - Click on "petshop" to expand it
+   - You should see 7 tables:
+     * customers
+     * inventory_history
+     * pets
+     * sales
+     * sales_items
+     * suppliers
+     * users
+
+If you don't see these tables, database import failed. Repeat STEP 2.
+
+================================================================================
+PART 3: VERIFY DATABASE CONTENT
+================================================================================
+
+STEP 1: Check Users Table
+   - Click on "petshop" database in left sidebar
+   - Click on "users" table
+   - You should see columns: id, name, email, password, role, created_at
+   - The table should be empty (no rows yet)
+   - This is normal - we'll create admin in next step
+
+STEP 2: Check Sample Data
+   - Click on "customers" table
+   - You should see 2 sample customers (Budi, Siti)
+   - Click on "pets" table
+   - You should see 2 sample pets (Tommy, Molly)
+   - This confirms data was imported successfully
+
+STEP 3: Check Suppliers Table
+   - Click on "suppliers" table
+   - Table should be empty (ready for you to add)
+   - This is normal
+
+If any of these don't look right:
+- Go back to PART 2 STEP 2 and re-import the database
+- Or manually import by copying-pasting SQL content
+
+================================================================================
+PART 4: APPLICATION CONFIGURATION
+================================================================================
+
+STEP 1: Open Config File
+   - Open: c:\xampp\htdocs\sistem-tokohewan\config.php
+   - Use Notepad, VS Code, or Sublime Text
+   - Do NOT use Word (will corrupt the file)
+
+STEP 2: Verify Database Settings
+   - Check these lines:
+     
+     define('DB_HOST', '127.0.0.1');    ← This is correct for localhost
+     define('DB_NAME', 'petshop');      ← This matches database name
+     define('DB_USER', 'root');         ← This is default MySQL user
+     define('DB_PASS', '');             ← This is empty (XAMPP default)
+
+   - If MySQL password is not empty, update DB_PASS value
+   - Save the file (Ctrl+S)
+
+STEP 3: Verify BASE_URL
+   - Check this line:
+     define('BASE_URL', '/sistem-tokohewan');
+   - This is correct if you put folder in c:\xampp\htdocs\sistem-tokohewan\
+   - If different folder name, update this value
+   - Save the file
+
+If config.php looks correct, move to PART 5.
+
+================================================================================
+PART 5: CREATE DEFAULT ADMIN
+================================================================================
+
+STEP 1: Open Browser
+   - Open: http://localhost/sistem-tokohewan/create_admin.php
+   - Wait for page to load
+
+STEP 2: Check Success Message
+   - You should see message: "Default admin created."
+   - Email: admin@petshop.local
+   - Password: admin123
+   - Copy this info somewhere safe
+
+STEP 3: Important - Only Run Once!
+   - NEVER run this page again
+   - If you run it again, you'll see: "Admin already exists."
+   - This is normal and expected
+
+If you see error messages:
+- Go back to PART 4 and verify config.php is correct
+- Check MySQL is still running
+- Try accessing phpmyadmin again to verify database connection
+
+================================================================================
+PART 6: TEST LOGIN
+================================================================================
+
+STEP 1: Open Application
+   - Open: http://localhost/sistem-tokohewan/
+   - Should redirect to login page
+   - You should see login form with Email and Password fields
+
+STEP 2: Enter Credentials
+   - Email: admin@petshop.local
+   - Password: admin123
+   - Click "Login" button
+
+STEP 3: Verify Success
+   - Should redirect to Admin Dashboard
+   - You should see:
+     * Sidebar menu on left (dark background)
+     * "Admin Dashboard" title
+     * 4 cards showing stats (0 values for new system)
+     * User name in top right
+
+If login failed:
+- Check if you typed email/password correctly
+- Verify caps lock is off
+- Go back to PART 5 to verify admin was created
+- Check browser console for JavaScript errors (F12 → Console)
+
+================================================================================
+PART 7: VERIFY ALL PAGES LOAD
+================================================================================
+
+STEP 1: Test Navigation Menu
+   - Click "Customers" in sidebar
+   - Should show Customers list page (empty)
+   - Should have "+ Add" button
+
+STEP 2: Test Other Pages
+   - Click "Pets" → Should show Pets list
+   - Click "Suppliers" → Should show Suppliers list
+   - Click "Sales" → Should show Sales list
+   - Click "Inventory" → Should show Inventory page
+   - Click "Dashboard" → Should show Dashboard
+
+STEP 3: Test Add Functionality
+   - Go to Customers
+   - Click "+ Add" button
+   - Should show Add Customer form
+   - Enter name: "Test Customer"
+   - Enter phone: "081234567890"
+   - Click "Save" button
+   - Should redirect to customer list and show your new customer
+
+If any page doesn't load or shows errors:
+- Check browser console (F12 → Console) for errors
+- Verify config.php settings
+- Check if MySQL is still running
+- Try refreshing page (Ctrl+R)
+
+================================================================================
+PART 8: VERIFY DATABASE UPDATES
+================================================================================
+
+STEP 1: Check Customer Was Saved
+   - Open phpMyAdmin: http://localhost/phpmyadmin/
+   - Click petshop database
+   - Click customers table
+   - You should see "Test Customer" you just created
+   - This confirms database write is working
+
+STEP 2: Check Inventory Works
+   - Go back to application
+   - Click "Pets" → "Add"
+   - Enter name: "Test Pet"
+   - Enter type: "Dog"
+   - Enter price: "500000"
+   - Enter stock: "10"
+   - Click "Save"
+   - You should see it in the pets list
+
+STEP 3: Verify in Database
+   - Open phpMyAdmin
+   - Check pets table
+   - Should show "Test Pet" you created
+   - This confirms CRUD is working
+
+================================================================================
+PART 9: TEST SALES TRANSACTION
+================================================================================
+
+STEP 1: Create a Sale
+   - Go to application home
+   - Click "Sales" → "New Sale"
+   - Should show empty form
+
+STEP 2: Add Items
+   - Make sure you have at least one pet with stock > 0
+   - If not, go to Pets and add one first
+   - In Sales form:
+     * Select a customer (optional)
+     * Click "Add Item"
+     * Select a pet from dropdown
+     * Enter quantity (e.g., 2)
+     * Price should auto-fill
+     * Total should auto-calculate
+   - Click "+ Add Item" to add more items
+
+STEP 3: Process Sale
+   - Click "Process Sale"
+   - Should redirect to Invoice page
+   - Should show invoice number (e.g., INV-20240403-123)
+
+STEP 4: Verify in Database
+   - Open phpMyAdmin
+   - Check sales table → should have your sale
+   - Check sales_items table → should have items
+   - Check pets table → stock should be reduced
+   - This confirms sales transaction works!
+
+================================================================================
+PART 10: FINAL VERIFICATION CHECKLIST
+================================================================================
+
+Before you start using the system, verify all these are working:
+
+DATABASE:
+□ phpMyAdmin shows "petshop" database
+□ All 7 tables exist
+□ Sample data is visible
+
+LOGIN:
+□ Can login with admin@petshop.local / admin123
+□ Admin dashboard loads
+
+NAVIGATION:
+□ Customers page loads
+□ Pets page loads
+□ Suppliers page loads
+□ Sales page loads
+□ Inventory page loads
+
+CRUD:
+□ Can add new customer
+□ Can add new pet
+□ Can add new supplier
+□ Can edit customer
+□ Can delete customer (or test with new one)
+
+SALES:
+□ Can create new sale
+□ Can add items to sale
+□ Total calculates correctly
+□ Invoice generates
+□ Stock decreases after sale
+
+DATABASE CHANGES:
+□ Changes appear in phpMyAdmin
+□ Database transactions persist
+□ No data corruption
+
+If all items are checked, system is ready to use!
+
+================================================================================
+PART 11: NEXT STEPS - START USING THE SYSTEM
+================================================================================
+
+NOW YOU CAN:
+
+1. Add Real Data
+   - Add your actual customers
+   - Add your actual pets/products with correct prices
+   - Add your suppliers
+
+2. Process Sales
+   - Create transactions
+   - Print invoices
+   - Track inventory
+
+3. Generate Reports
+   - Sales report
+   - Stock report
+   - Customer report
+
+4. Manage Users (Admin only)
+   - Create kasir accounts
+   - Create owner accounts
+   - Manage user permissions
+
+5. Team Training
+   - Train your staff on each role
+   - Admin: full system access
+   - Kasir: sales & inventory
+   - Owner: reporting & analytics
+
+================================================================================
+PART 12: COMMON ISSUES & SOLUTIONS
+================================================================================
+
+ISSUE: "Database connection failed"
+SOLUTION:
+1. Open XAMPP Control Panel
+2. Verify MySQL is running (green)
+3. Check config.php settings match your MySQL setup
+4. Try accessing phpMyAdmin to test connection
+
+ISSUE: "Admin already exists" on create_admin.php
+SOLUTION:
+- This is normal! It means admin was already created.
+- Just login with admin@petshop.local / admin123
+- Don't run create_admin.php again
+
+ISSUE: Login page shows but login fails
+SOLUTION:
+1. Verify database was imported
+2. Verify create_admin.php was run
+3. Check email is exactly: admin@petshop.local
+4. Check password is exactly: admin123 (case-sensitive)
+5. Try accessing phpmyadmin to verify users table exists
+
+ISSUE: "Page not found" or 404 error
+SOLUTION:
+1. Check folder path is correct: c:\xampp\htdocs\sistem-tokohewan\
+2. Check URL is correct: http://localhost/sistem-tokohewan/
+3. Restart Apache in XAMPP Control Panel
+4. Clear browser cache (Ctrl+Shift+Del)
+
+ISSUE: No data appears or SQL errors
+SOLUTION:
+1. Go back to PART 2 and re-import database
+2. Make sure you're importing into correct database (petshop)
+3. Check if MySQL has enough space
+4. Verify phpmyadmin shows imported tables
+
+ISSUE: Changes don't save or database feels slow
+SOLUTION:
+1. Check MySQL is still running
+2. Verify no other applications are using port 3306
+3. Restart MySQL in XAMPP
+4. Check disk space
+
+For other issues:
+- Check QUICK_REFERENCE.txt
+- Check DOKUMENTASI.txt
+- Read code comments in relevant files
+
+================================================================================
+PART 13: BACKUP YOUR DATA
+================================================================================
+
+It's important to backup your data regularly!
+
+WEEKLY BACKUP:
+1. Open phpmyadmin: http://localhost/phpmyadmin/
+2. Select "petshop" database
+3. Click "Export" tab
+4. Click "Go"
+5. Save the SQL file
+6. Store safely (USB, cloud, etc.)
+
+RESTORE FROM BACKUP:
+1. Open phpmyadmin
+2. Click "Import" tab
+3. Select your backup SQL file
+4. Click "Go"
+5. Database restored!
+
+================================================================================
+SUMMARY
+================================================================================
+
+You now have a complete petshop management system!
+
+File Location: c:\xampp\htdocs\sistem-tokohewan\
+Database: petshop
+Login: admin@petshop.local / admin123
+URL: http://localhost/sistem-tokohewan/
+
+Key Files:
+- config.php → Database settings
+- sql/petshop.sql → Database backup/restore
+- README.txt → User guide
+- DOKUMENTASI.txt → Technical details
+- QUICK_REFERENCE.txt → Troubleshooting
+
+Good luck with your business! 📱🐕
+
+================================================================================
+Questions? Check:
+1. README.txt - Installation & common issues
+2. QUICK_REFERENCE.txt - Troubleshooting guide  
+3. DOKUMENTASI.txt - Technical documentation
+4. Browser console (F12) - For errors
+5. phpMyAdmin - To check database
+
+Created: December 2024
+Version: 1.0 Production Ready
+================================================================================
